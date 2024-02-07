@@ -1,10 +1,12 @@
 import logo from './logo.svg';
 import './App.css';
+import Login from './components/Login/Login';
 
 function App() {
   return (
     <>
-    Hello World!
+    <Login />
+    
     </>
   );
 }
