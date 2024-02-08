@@ -4,12 +4,17 @@ import React from 'react';
 import { Container, Navbar, Nav, Button } from 'react-bootstrap';
 import { useNavigate, NavLink } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectIsLoggedIn, logout } from '../Authentication/authSlice';
+import { selectIsLoggedIn, logout } from '../authentication/authSlice';
 
 const Header = () => {
-    const authCtx = useContext(AuthContext);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const isLoggedIn = useSelector(selectIsLoggedIn);
 
-  
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate('/');
+  };
 
   return (
     <Navbar bg="dark" variant="dark">

@@ -1,117 +1,92 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Form, Button, Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import AuthContext from '../../authentication/authContext';
 import "./Login.css";
+import axios from "axios";
+
+import { useSelector, useDispatch } from 'react-redux';
+import { login, selectIsLoggedIn} from '../../authentication/authSlice';
 
 const Login = () => {
-  const history = useNavigate();
-
+  
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
 
-  const authCtx = useContext(AuthContext);
+  const isLoggedIn = useSelector(selectIsLoggedIn);
+ 
 
+  // State
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
-  const toggle = () => {
-    setIsLogin(!isLogin);
+  useEffect(() => {
+    // Redirect to the welcome page if already logged in
+    if (isLoggedIn) {
+      navigate('/expense-tracker');
+    }
+  }, [isLoggedIn, navigate]);
+
+  // Toggle between login and sign up modes
+  const toggleMode = () => {
+    setIsLogin((prevMode) => !prevMode);
   };
 
-  const submitHandler = (event) => {
+  // Handle form submission
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     const enteredEmail = emailInputRef.current.value;
-
     const enteredPassword = passwordInputRef.current.value;
-
-    // Add validation
 
     setIsLoading(true);
 
-    let url;
+    const authEndpoint = isLogin ? "signInWithPassword" : "signUp";
 
-    if (isLogin) {
-      url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBq19knWGgaE6RYM_LTx_TcdzssH1Ks7OE`;
-    } else {
-      url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBq19knWGgaE6RYM_LTx_TcdzssH1Ks7OE`;
+    const url = `https://identitytoolkit.googleapis.com/v1/accounts:${authEndpoint}?key=AIzaSyBq19knWGgaE6RYM_LTx_TcdzssH1Ks7OE`;
+
+    try {
+      const response = await axios.post(url, {
+        email: enteredEmail,
+        password: enteredPassword,
+        returnSecureToken: true,
+      });
+      dispatch(login({'token':response.data.idToken, 'userEmail': response.data.email}));
+      navigate("/complete-profile");
+    } catch (error) {
+      alert(error.message || "Authentication failed!");
     }
 
-    fetch(url, {
-      method: "POST",
-
-      body: JSON.stringify({
-        email: enteredEmail,
-
-        password: enteredPassword,
-
-        returnSecureToken: true,
-      }),
-
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => {
-        setIsLoading(false);
-
-        if (res.ok) {
-          return res.json();
-        } else {
-          return res.json().then((data) => {
-            let errorMessage = "Authentication failed!";
-
-            if (data && data.error && data.error.message) {
-              errorMessage = data.error.message;
-            }
-
-            throw new Error(errorMessage);
-          });
-        }
-      })
-
-      .then((data) => {
-        authCtx.login(data.idToken, data.email);
-        history('/complete-profile')
-      })
-
-      .catch((err) => {
-        alert(err.message);
-      });
+    setIsLoading(false);
   };
 
   return (
-    <Container className="container1">
+    <Container className="mt-5">
       <div className="login-container">
         <h2 className="login-header">{isLogin ? "Login" : "Sign Up"}</h2>
 
-        <Form onSubmit={submitHandler}>
+        <Form onSubmit={handleSubmit}>
           <Form.Group controlId="email">
             <Form.Label>Email:</Form.Label>
-
             <Form.Control type="email" required ref={emailInputRef} />
           </Form.Group>
 
           <Form.Group controlId="password">
             <Form.Label>Password:</Form.Label>
-
             <Form.Control type="password" required ref={passwordInputRef} />
           </Form.Group>
 
           <div>
-            {!isLoading && (
-              <Button type="submit">
-                {isLogin ? "LOGIN" : "CREATE ACCOUNT"}
-              </Button>
-            )}
-
+            <Button type="submit" disabled={isLoading}>
+              {isLogin ? "LOGIN" : "CREATE ACCOUNT"}
+            </Button>
             {isLoading && <p className="loading">Sending request....</p>}
           </div>
         </Form>
 
         <div className="button2">
-          <Button className="bg-white" onClick={toggle}>
+          <Button className="bg-white" onClick={toggleMode}>
             {isLogin ? "Create New Account" : "Login with Existing Account"}
           </Button>
         </div>
