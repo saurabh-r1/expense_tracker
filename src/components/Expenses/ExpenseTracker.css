@@ -55,7 +55,7 @@
   }
 
 
-  body.dark-theme {
+  div.dark-theme {
     background-color: #282c35;
     color: #fff;
   }

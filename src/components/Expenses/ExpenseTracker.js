@@ -194,6 +194,7 @@ const ExpenseTracker = () => {
     document.body.removeChild(link);
   };
 
+  
   const generateCSV = (expenses) => {
     const header = 'Money Spent,Description,Category\n';
     const csvContent = expenses.reduce((acc, expense) => {
@@ -205,10 +206,11 @@ const ExpenseTracker = () => {
 
   return (
     // <Container className={`mt-5 ${isDarkMode ? 'dark-theme' : ''}`}>
-    <Container className={`mt-5 ${isDarkMode ? 'bg-dark text-light' : ''}`}>
-    <Row>
+    <div className={`mt-0 ${isDarkMode ? 'bg-dark text-light' : ''}`}>
+    <Container>
+    <Row >
         <Col>
-        <div className={`expense-form ${isDarkMode ? 'bg-dark text-light' : ''}`}>
+        <div className={`expense-form mt-5 ${isDarkMode ? 'bg-dark text-light' : ''}`}>
             <h2>Expense Tracker</h2>
             <Form>
               <Row className="mb-3">
@@ -326,6 +328,7 @@ const ExpenseTracker = () => {
         </Col>
       </Row>
     </Container>
+    </div>
   );
 };
 
