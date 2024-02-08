@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { Form, Button, Container, Row, Col, ListGroup, Dropdown } from "react-bootstrap";
-import { selectIsLoggedIn } from '../../Authentication/authSlice';
+import { selectIsLoggedIn } from '../../authentication/authSlice';
 import { selectExpenses, setExpenses, addExpense as addExpenseAction, deleteExpense as deleteExpenseAction, updateExpense as updateExpenseAction } from './expenseSlice';
 import { toggleTheme, selectDarkMode } from './themeSlice';
 import axios from "axios";
@@ -36,7 +36,7 @@ const ExpenseTracker = () => {
   const fetchExpenses = async () => {
     try {
       const response = await axios.get(
-        `https://expense-tracker-aa503-default-rtdb.firebaseio.com/expenses/${userEmail}.json`
+        `https://expensetracker-9f31c-default-rtdb.firebaseio.com/expenses/${userEmail}.json`
       );
 
       if (!response.data) {
