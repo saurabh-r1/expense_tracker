@@ -71,7 +71,7 @@ const ExpenseTracker = () => {
       };
 
       const response = await axios.post(
-        `https://expense-tracker-aa503-default-rtdb.firebaseio.com/expenses/${userEmail}.json`,
+        `https://expensetracker-9f31c-default-rtdb.firebaseio.com/expenses/${userEmail}.json`,
         newExpense
       );
 
@@ -96,7 +96,7 @@ const ExpenseTracker = () => {
       dispatch(deleteExpenseAction(expenseId));
 
       const response = await axios.delete(
-        `https://expense-tracker-aa503-default-rtdb.firebaseio.com/expenses/${userEmail}/${expenseId}.json`
+        `https://expensetracker-9f31c-default-rtdb.firebaseio.com/expenses/${userEmail}/${expenseId}.json`
       );
 
       if (!response.data) {
@@ -132,7 +132,7 @@ const ExpenseTracker = () => {
       };
 
       const response = await axios.put(
-        `https://expense-tracker-aa503-default-rtdb.firebaseio.com/expenses/${userEmail}/${editingExpense.id}.json`,
+        `https://expensetracker-9f31c-default-rtdb.firebaseio.com/expenses/${userEmail}/${editingExpense.id}.json`,
         updatedExpense
       );
 

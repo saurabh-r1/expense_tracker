@@ -8,6 +8,8 @@ import WelcomePage from './Others/WelcomePage';
 import CompleteProfile from './Others/CompleteProfile';
 import AuthGuard from './authentication/AuthGaurd';
 import ExpenseTracker from './components/Expenses/ExpenseTracker';
+import EditProfile from './Others/EditProfile';
+
 
 
 function App() {
@@ -22,6 +24,7 @@ function App() {
         <Route path="/expense-tracker" element={<AuthGuard><ExpenseTracker /></AuthGuard>} />
         <Route path="/welcome" element={<AuthGuard><WelcomePage /></AuthGuard>} />
         <Route path="/complete-profile" element={<AuthGuard><CompleteProfile /></AuthGuard>} />
+        <Route path="/edit-profile" element={<AuthGuard><EditProfile /></AuthGuard>} />
       </Routes>
     </Router>
     </>
